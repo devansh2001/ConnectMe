@@ -15,8 +15,6 @@ public class Config {
     }
     @Bean
     public ServerService server() {
-        log.info("here");
-//        System.out.println("yay");
         return new ServerService();
     }
 }

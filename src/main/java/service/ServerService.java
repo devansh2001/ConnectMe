@@ -1,5 +1,6 @@
 package service;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import model.MessageToServer;
 
@@ -10,12 +11,13 @@ import lombok.extern.java.Log;
 
 @Log
 @Slf4j
+@Data
 public class ServerService {
     private String url;
     private String user;
     private String password;
-    Connection connection;
-    Statement statement;
+    private Connection connection;
+    private Statement statement;
 
     public ServerService() {
         System.out.println("Hello");
@@ -30,20 +32,26 @@ public class ServerService {
         }
     }
 
-    private void processRequest(MessageToServer messageToServer) {
+    public void processRequest(MessageToServer messageToServer) {
         String from = messageToServer.getFrom();
         String to = messageToServer.getTo();
         if (checkUserValidity(from) && checkUserValidity(to)) {
             log.info("Would have written");
         }
+        log.info("Nothing here");
     }
 
     private boolean checkUserValidity(String username) {
         String query =
                 "SELECT * FROM users_list WHERE USERNAME = '" + username + "'";
         try {
+            System.out.println(statement);
+            System.out.println(connection);
             ResultSet resultSet = statement.executeQuery(query);
             log.info("Queried to check validity of user: " + username);
+            if (resultSet.wasNull()) {
+                return false;
+            }
         } catch (SQLException exception) {
             log.info("Error while querying users_list for " + username);
             return false;
