@@ -6,7 +6,7 @@ import model.MessageToServer;
 
 import java.sql.*;
 
-
+import java.util.Date;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +44,18 @@ public class ServerService {
     public ResponseEntity processRequest(MessageToServer messageToServer) {
         String from = messageToServer.getFrom();
         String to = messageToServer.getTo();
-        System.out.println("Connection: " + this.connection);
-        System.out.println("Statement: " + this.statement);
+        String data = messageToServer.getData();
         if (checkUserValidity(from) && checkUserValidity(to)) {
             log.info("Users have been validated");
+            String query = "INSERT INTO chat_data (sender, receiver, " +
+                    "timestamp, data) VALUES (" + "'" + from + "'" + ", " + "'" + to + "'" +
+                    ", " + "'" + new Timestamp(new Date().getTime()) + "'" + ", " +  "'" + data +  "'" + ")";
+            try {
+                statement.execute(query);
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+                log.info("Unable to send message. Please try again");
+            }
             return new ResponseEntity(HttpStatus.OK);
         } else {
             log.info("Users " + from + " and/or " + to + " are invalid ");

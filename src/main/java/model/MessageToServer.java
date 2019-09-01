@@ -9,5 +9,4 @@ public class MessageToServer implements Serializable  {
     private String data;
     private String from;
     private String to;
-
 }
