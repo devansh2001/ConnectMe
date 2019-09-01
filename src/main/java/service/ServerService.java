@@ -21,20 +21,28 @@ public class ServerService {
 
     public ServerService() {
         System.out.println("Hello");
-        this.url = "jdbc:mysql://localhost:3306/ConnectMe";
+        this.url = "jdbc:mysql://localhost:3306/ConnectMe?useSSL=false";
         this.user = "root";
         this.password = "adminadmin";
+//        this.url += "user=" + this.user + "&password=" + this.password;
         try {
-            this.connection = DriverManager.getConnection(this.url);
+            Class.forName("com.mysql.jdbc.Driver");
+            this.connection = DriverManager.getConnection(this.url, this.user
+                    , this.password);
             this.statement = connection.createStatement();
         } catch (SQLException exception) {
             log.info("Connection error while connecting to " + this.url);
+        } catch (Exception exception) {
+            log.info("Connection error while connecting to " + this.url + ". " +
+                    "ClassNotFound");
         }
     }
 
     public void processRequest(MessageToServer messageToServer) {
         String from = messageToServer.getFrom();
         String to = messageToServer.getTo();
+        System.out.println("Connection: " + this.connection);
+        System.out.println("Statement: " + this.statement);
         if (checkUserValidity(from) && checkUserValidity(to)) {
             log.info("Would have written");
         }

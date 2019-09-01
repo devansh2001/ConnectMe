@@ -22,10 +22,9 @@ import javax.ws.rs.core.Response;
 @RestController
 @EnableAutoConfiguration
 @AllArgsConstructor
-@NoArgsConstructor
+@RequestMapping("connect-me")
 public class Manager {
-    @Autowired
-    ServerService serverService;
+//    ServerService serverService;
     @GetMapping("/")
     public String mytest() {
         return "I hope this works...";
@@ -33,9 +32,12 @@ public class Manager {
 
     @PutMapping("/send-message")
     public ResponseEntity sendMessage(MessageToServer messageToServer) {
+        ServerService serverService = new ServerService();
         System.out.println(serverService);
-        System.out.println(serverService.getUrl());
-        serverService.processRequest(messageToServer);
+//        System.out.println(serverService.getUrl());
+//        System.out.println(serverService.getConnection());
+//        System.out.println();
+//        serverService.processRequest(messageToServer);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
