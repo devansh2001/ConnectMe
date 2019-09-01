@@ -21,20 +21,11 @@ import javax.ws.rs.core.Response;
 @AllArgsConstructor
 @RequestMapping("connect-me")
 public class Manager {
-//    ServerService serverService;
-    @GetMapping("/")
-    public String mytest() {
-        return "I hope this works...";
-    }
 
     @PutMapping("/send-message")
     public ResponseEntity sendMessage(@RequestBody MessageToServer messageToServer) {
         messageToServer.getFrom();
         ServerService serverService = new ServerService();
-        System.out.println(serverService);
-//        System.out.println(serverService.getUrl());
-//        System.out.println(serverService.getConnection());
-//        System.out.println();
         serverService.processRequest(messageToServer);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
