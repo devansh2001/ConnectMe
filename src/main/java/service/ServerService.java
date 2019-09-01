@@ -47,6 +47,10 @@ public class ServerService {
     }
 
     public @ResponseBody ResponseEntity refresh(String username) {
+        if (!checkUserValidity(username)) {
+            return new ResponseEntity<String>("User does not exist!",
+                    HttpStatus.NOT_FOUND);
+        }
         List<ResponseFromServerToReceipient> messages = new LinkedList<>();
         String query =
                 "SELECT * FROM chat_data WHERE receiver = " + "'" + username + "'";
@@ -96,8 +100,8 @@ public class ServerService {
             return new ResponseEntity(HttpStatus.CONFLICT);
         } else {
             String query =
-                    "INSERT INTO users_list (USERNAME) values " + "('" +
-                            account.getUsername() + "')";
+                    "INSERT INTO users_list (username, password) values " + "('" +
+                            account.getUsername() + "'" + ", " + "'" + account.getPassword().hashCode() + "')";
             try {
                 statement.execute(query);
             } catch (SQLException exception) {
