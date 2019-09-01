@@ -3,7 +3,9 @@ package controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import model.Account;
 import model.MessageToServer;
+import model.RefreshRequestToServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,15 +21,27 @@ import javax.ws.rs.core.Response;
 @RestController
 @EnableAutoConfiguration
 @AllArgsConstructor
-@RequestMapping("connect-me")
+@RequestMapping("/connect-me")
 public class Manager {
 
     @PutMapping("/send-message")
     public ResponseEntity sendMessage(@RequestBody MessageToServer messageToServer) {
-        messageToServer.getFrom();
         ServerService serverService = new ServerService();
         serverService.processRequest(messageToServer);
         return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/create-account")
+    public ResponseEntity createAccount(@RequestBody Account account) {
+        ServerService serverService = new ServerService();
+        return serverService.newUser(account);
+
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity refresh(@RequestBody RefreshRequestToServer refreshRequestToServer) {
+        ServerService serverService = new ServerService();
+        return serverService.refresh(refreshRequestToServer.getUsername());
     }
 
 }
